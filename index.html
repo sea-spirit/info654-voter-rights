@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Voting Rights</title>
+
+    <!-- Simple internal CSS so the page is portable and easy to understand -->
+    <style>
+        body {
+            font-family: Georgia, serif;
+            margin: 0;
+            padding: 0;
+            background: #fafafa;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #002147;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #e8e8e8;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #002147;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            color: #002147;
+            margin-top: 40px;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 25px;
+        }
+
+        /* Quiz styling */
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Hotline box */
+        #hotlineBox {
+            background: #f0f7ff;
+            border: 1px solid #bcd4ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Your Voting Rights in New York</h1>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="RegisterandPoll.html">Registration & Polling</a>
+    <a href="earlyvoting.html">Early Voting</a>
+    <a href="affidavit.html">Affidavits</a>
+    <a href="voterrights.html">Voter Rights</a>
+</nav>
+
+<div class="container">
+
+    <div class="box">
+        <h2>Know Your Rights at the Polls</h2>
+        <p>
+            Every voter has certain rights protected under federal and state law. Understanding these
+            protections ensures that you can cast your ballot confidently and without interference.
+            Below is a plain-language overview of the rights that matter most for New Yorkers.
+        </p>
+    </div>
+
+    <div class="box">
+        <h2>1. Freedom From Discrimination</h2>
+        <p>
+            The Voting Rights Act protects you from discrimination based on race, color, or membership
+            in a protected language minority group. No one at a polling place may treat you differently
+            because of your identity or background.
+        </p>
+    </div>
+
+    <div class="box">
+        <h2>2. Right to Assistance</h2>
+        <p>You may bring someone with you to help you vote, as long as it is not your employer or union representative.</p>
+        <p>New York also provides:</p>
+        <ul>
+            <li>Language assistance at select sites</li>
+            <li>Ballot marking devices for accessibility</li>
+            <li>ADA-compliant entrances at polling places</li>
+        </ul>
+    </div>
+
+    <div class="box">
+        <h2>3. Right to a Provisional (Affidavit) Ballot</h2>
+        <p>
+            If you're told your name is not in the pollbook, you are still entitled to vote using an affidavit ballot.
+            Do <strong>not</strong> leave without voting.
+        </p>
+    </div>
+
+    <div class="box">
+        <h2>4. Protection from Intimidation</h2>
+        <p>
+            Intimidation is illegal. This includes aggressive questioning, blocking the entrance,
+            threats, misinformation, or attempts to influence your vote.
+        </p>
+        <p>If you experience this, report it immediately using the hotline widget below.</p>
+    </div>
+
+    <!-- Hotline API Widget -->
+    <div class="box">
+        <h2>Election Protection Hotline (Automatically Retrieved)</h2>
+        <p>This national, nonpartisan hotline can help if you experience problems while voting.</p>
+        <div id="hotlineBox">Loading hotline...</div>
+    </div>
+
+    <!-- Quiz -->
+    <div class="box">
+        <h2>Quick Quiz: Know Your Rights</h2>
+
+        <div class="quiz-question">
+            <p>1. If your name is missing from the voter list, what should you do?</p>
+            <select id="q1">
+                <option value="">Select</option>
+                <option value="wrong">Leave and come back later</option>
+                <option value="correct">Request an affidavit (provisional) ballot</option>
+                <option value="wrong">You cannot vote</option>
+            </select>
+        </div>
+
+        <div class="quiz-question">
+            <p>2. Who is NOT allowed to assist you while voting?</p>
+            <select id="q2">
+                <option value="">Select</option>
+                <option value="wrong">A friend</option>
+                <option value="wrong">A family member</option>
+                <option value="correct">Your employer or union representative</option>
+            </select>
+        </div>
+
+        <div class="quiz-question">
+            <p>3. Is voter intimidation illegal?</p>
+            <select id="q3">
+                <option value="">Select</option>
+                <option value="correct">Yes</option>
+                <option value="wrong">No</option>
+            </select>
+        </div>
+
+        <div class="quiz-question">
+            <p>4. Can voters with disabilities request accommodations at the polling site?</p>
+            <select id="q4">
+                <option value="">Select</option>
+                <option value="correct">Yes</option>
+                <option value="wrong">No</option>
+            </select>
+        </div>
+
+        <button onclick="checkQuiz()">Submit</button>
+        <p id="quizResult" class="quiz-result"></p>
+    </div>
+
+</div>
+
+<!-- JavaScript -->
+<script>
+
+// --- Election Protection API (simple JSON fetch) ---
+fetch("https://raw.githubusercontent.com/kyledecker/election-hotline-api/master/election-hotlines.json")
+.then(response => response.json())
+.then(data => {
+    // national number available in the file
+    const hotline = data.national.english;
+    document.getElementById("hotlineBox").innerText = `Election Protection Hotline: ${hotline}`;
+})
+.catch(() => {
+    document.getElementById("hotlineBox").innerText = 
+        "Election Protection Hotline: 866-OUR-VOTE";
+});
+
+
+// --- Quiz Logic ---
+function checkQuiz() {
+    let score = 0;
+
+    if (document.getElementById("q1").value === "correct") score++;
+    if (document.getElementById("q2").value === "correct") score++;
+    if (document.getElementById("q3").value === "correct") score++;
+    if (document.getElementById("q4").value === "correct") score++;
+
+    document.getElementById("quizResult").innerText =
+        `You got ${score} out of 4 correct.`;
+}
+
+</script>
+
+</body>
+</html>
